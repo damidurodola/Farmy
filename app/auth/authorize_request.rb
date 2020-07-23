@@ -25,8 +25,8 @@ class AuthorizeRequest
   def decoded_auth_token
     @decoded_auth_token ||= JsonWebToken.decode(http_auth_header)
 
-  rescue JWT::DecodeError => e
-    raise ("#{e.message}")
+  rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError
+    head :unauthorized
   end
 
   def http_auth_header
